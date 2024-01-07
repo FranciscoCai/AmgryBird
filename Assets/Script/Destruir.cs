@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Destruir : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private float radio;
+    [SerializeField] private float fuerzaImpulso;
     void Start()
     {
         Invoke("desytuir", 1f);
@@ -13,7 +14,20 @@ public class Destruir : MonoBehaviour
     // Update is called once per frame
     private void desytuir()
     {
-        //Slingshot.S.EliminarProyectil(gameObject);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radio);
+        foreach (Collider col in colliders)
+        {
+
+            if (col.gameObject != gameObject)
+            {
+                Rigidbody rb = col.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    Vector3 direction = col.transform.position - transform.position;
+                    rb.AddForce(direction.normalized * fuerzaImpulso, ForceMode.Impulse);
+                }
+            }
+        }
         Destroy(gameObject);
     }
 }

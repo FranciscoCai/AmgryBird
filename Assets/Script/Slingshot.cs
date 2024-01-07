@@ -6,16 +6,17 @@ public class Slingshot : MonoBehaviour
 {
     static public Slingshot S;
 
-    [SerializeField] private GameObject prefabproyectile;
+    [SerializeField] private GameObject[] prefabproyectile;
+    [SerializeField]  private int NumeroDeInstancia = 0;
     [SerializeField] private float velocityMult = 8f;
 
     private GameObject launchPoint;
     private Vector3 launchPos;
     private GameObject proyectile;
-    private bool aimingMode;
+    static public bool aimingMode;
     private Rigidbody rb;
-
-    public Dictionary<GameObject, GameObject> birds;
+    
+    
     private void Awake()
     {
         S = this;
@@ -24,7 +25,6 @@ public class Slingshot : MonoBehaviour
         launchPoint.SetActive(false);
         launchPos = launchPointTrans.position;
     }
-
     private void OnMouseEnter()
     {
         Debug.Log("MouseEnter");
@@ -37,12 +37,23 @@ public class Slingshot : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (GameObject pTemp in gos)
+        {
+            Destroy(pTemp);
+        }
         aimingMode = true;
-        proyectile = Instantiate(prefabproyectile);
+       
+        proyectile = Instantiate(prefabproyectile[NumeroDeInstancia]);
+        NumeroDeInstancia++;
+        if (NumeroDeInstancia > prefabproyectile.Length-1)
+        {
+            NumeroDeInstancia = 0;
+        }
         rb = proyectile.GetComponent<Rigidbody>();
         rb.isKinematic = true;
-        //birds.Add(proyectile, proyectile);
     }
+   
     private void Update()
     {
         DisparoProyectil();
@@ -73,11 +84,6 @@ public class Slingshot : MonoBehaviour
             
             proyectile = null;
         }
-    }
-    public void EliminarProyectil(GameObject bird)
-    {
-        birds.Remove(bird);
-        Debug.Log(birds);
     }
 }
 
