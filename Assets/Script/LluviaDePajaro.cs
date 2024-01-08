@@ -11,11 +11,16 @@ public class LluviaDePajaro : MonoBehaviour
     {
         for (int i = 0; i <3;  i++)
         {
+
             GameObject toInstantiate = Instantiate(Birds, 
             new Vector2(Random.Range(gameObject.transform.position.x +3f, gameObject.transform.position.x -3f),
             Random.Range(gameObject.transform.position.y + 15f, gameObject.transform.position.y + 12f)), Quaternion.identity);
             Rb = toInstantiate.GetComponent<Rigidbody>();
-            Rb.AddForce(VelocidadDelPajaro, ForceMode.Impulse);
+            Rb.AddForce(VelocidadDelPajaro, ForceMode.Impulse);            
+            if(i == 0)
+            {
+                Camara.POI = toInstantiate;
+            }
         }
 
         Destroy(gameObject);
